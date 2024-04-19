@@ -1,9 +1,20 @@
-const context = new AudioContext();
+const startbtn = document.querySelector('button');
 
-const osc = context.createOscillator();
+let osc;
 
-osc.type = "sine"
-osc.frequency.value = 440.0;
+startbtn.addEventListener('click', () => {
 
-osc.connect(context.destination);
-osc.start();
+  const context = new AudioContext();
+
+  osc = context.createOscillator();
+
+  osc.type = "sine"
+  osc.frequency.value = 440.0;
+
+  osc.connect(context.destination);
+  osc.start();
+});
+
+freqRangeIn.addEventListener('input', () => {
+  osc.frequency.value = freqRangeIn.value;
+})
