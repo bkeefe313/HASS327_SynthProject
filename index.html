@@ -10,6 +10,39 @@
         <div id="console">
             <label for="volume">Volume:</label>
             <input type="range" id="volume" name="volume" min="0" max="100">
+            <label for="filter-sliders">Filters:</label>
+            <div id="filter-sliders">
+                <input id="low-pass" type="range" min="500" max="1000">
+                <input id="low-pass-toggle" type="checkbox">Low Pass
+                <input id="high-pass" type="range" min="20" max="1000">
+                <input id="high-pass-toggle" type="checkbox">High Pass
+                <input id="band-pass" type="range" min="20" max="1000">
+                <input id="band-pass-toggle" type="checkbox">Band Pass
+            </div>
+            <label for="ticker">Transpose:</label>
+            <input type="number" id="ticker" name="ticker" min="-5" max="5" step="1" value="0">
+            <div class="osc-controls">
+                <label for="osc-a">Oscillator A</label>
+                <input id="a-on" type="checkbox" checked>On
+                <select id="a-type" name="osc-a-type">
+                    <option value="sine">Sine</option>
+                    <option value="square">Square</option>
+                    <option value="sawtooth">Sawtooth</option>
+                    <option value="triangle">Triangle</option>
+                </select>
+                <input id="a-detune" type="range" min="-100" max="100" value="0">
+            </div>
+            <div id="osc-controls">
+                <label for="osc-b">Oscillator B</label>
+                <input id="b-on" type="checkbox" checked>On
+                <select id="b-type" name="osc-b-type">
+                    <option value="sine">Sine</option>
+                    <option value="square">Square</option>
+                    <option value="sawtooth">Sawtooth</option>
+                    <option value="triangle">Triangle</option>
+                </select>
+                <input id="b-detune" type="range" min="-100" max="100" value="0">
+            </div>
         </div>
         <div id="piano">
             <div id="c1" class="key white">A</div>
@@ -25,6 +58,26 @@
             <div id="b_" class="key black">U</div>
             <div id="b" class="key white">J</div>
             <div id="c2" class="key white">K</div>
+        </div>
+        <div id="envelope-controls">
+            <label for="attack">Attack</label>
+            <input
+            name="attack"
+            id="attack"
+            type="range"
+            min="0"
+            max="1"
+            value="0.2"
+            step="0.1" />
+            <label for="release">Release</label>
+            <input
+            name="release"
+            id="release"
+            type="range"
+            min="0"
+            max="1"
+            value="0.5"
+            step="0.1" />
         </div>
     </div>
 </body>
