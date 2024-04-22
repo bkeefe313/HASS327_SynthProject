@@ -1,1 +1,34 @@
-Hello World
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="style.css">
+<head>
+    <title>HASS 327 Synth Project</title>
+</head>
+<body>
+    <h1>HASS 327 SYNTH PROJECT</h1>
+    <div id="synth">
+        <div id="console">
+            <label for="volume">Volume:</label>
+            <input type="range" id="volume" name="volume" min="0" max="100">
+        </div>
+        <div id="piano">
+            <div id="c1" class="key white">A</div>
+            <div id="d_" class="key black">W</div>
+            <div id="d" class="key white">S</div>
+            <div id="e_" class="key black">E</div>
+            <div id="e" class="key white">D</div>
+            <div id="f" class="key white">F</div>
+            <div id="g_" class="key black">T</div>
+            <div id="g" class="key white">G</div>
+            <div id="a_" class="key black">Y</div>
+            <div id="a" class="key white">H</div>
+            <div id="b_" class="key black">U</div>
+            <div id="b" class="key white">J</div>
+            <div id="c2" class="key white">K</div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+<script src="script.js"></script>
+</html>
