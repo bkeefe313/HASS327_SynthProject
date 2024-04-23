@@ -16,6 +16,7 @@ body h1 {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+  gap: 2em;
 }
 
 #piano {
@@ -67,4 +68,14 @@ body h1 {
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+  gap: 2ch;
+}
+
+#filter-sliders {
+  text-align: center;
+}
+
+#filter-sliders>div {
+  display: flex;
+  gap: 2ch;
 }
