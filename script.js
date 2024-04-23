@@ -202,12 +202,12 @@ function stopOscillators(key) {
 
 for (let i = 0; i < frequencies.length; i++) {
   //for loop to iterate through the array
-  keys[i].addEventListener("pointerdown", (event) => {
+  keys[i].addEventListener("pointerdown", () => {
     let a = oscAOn
-      ? playOscillatorA(frequencies[i], event.key, oscAType, oscADetune)
+      ? playOscillatorA(frequencies[i], keyboardKeyNames[i], oscAType, oscADetune)
       : null;
     let b = oscBOn
-      ? playOscillatorB(frequencies[i], event.key, oscBType, oscBDetune)
+      ? playOscillatorB(frequencies[i], keyboardKeyNames[i], oscBType, oscBDetune)
       : null;
     let hookup = createPipeline();
     if (oscAOn && oscBOn) {
@@ -221,7 +221,10 @@ for (let i = 0; i < frequencies.length; i++) {
       b.connect(hookup);
     }
   });
-  window.addEventListener('mouseup', function () {
+  keys[i].addEventListener("pointerup", () => {
+    stopOscillators(keyboardKeyNames[i]);
+  });
+  keys[i].addEventListener("pointerout", () => {
     stopOscillators(keyboardKeyNames[i]);
   });
 }
