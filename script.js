@@ -32,25 +32,21 @@ let secondOscillatorOn = false;
 
 // filters
 let highPassSlider = document.getElementById('high-pass');
+let highPassQSlider = document.getElementById('high-pass-q');
 let lowPassSlider = document.getElementById('low-pass');
-let bandPassSlider = document.getElementById('band-pass');  
+let lowPassQSlider = document.getElementById('low-pass-q');
 let highPassNode = context.createBiquadFilter(); //creates high pass filter
 let lowPassNode = context.createBiquadFilter(); //creates low pass filter
-let bandPassNode = context.createBiquadFilter(); //creates band pass filter
 let highPassOn = false;
 let lowPassOn = false;
 let bandPassOn = false;
 document.getElementById('high-pass-toggle').oninput = function() {
     highPassOn = !highPassOn;
-    highPassNode.frequency.value = highPassOn ? highPassSlider.value : 0;
+    highPassNode.frequency.value = highPassOn ? highPassSlider.value : 22000;
 }
 document.getElementById('low-pass-toggle').oninput = function() {
     lowPassOn = !lowPassOn;
-    lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 22000;
-}
-document.getElementById('band-pass-toggle').oninput = function() {
-    bandPassOn = !bandPassOn;
-    bandPassNode.frequency.value = bandPassOn ? bandPassSlider.value : 0;
+    lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 0;
 }
 highPassSlider.oninput = function() {
     highPassNode.type = 'highpass'; //chooses the type of filter
@@ -60,9 +56,11 @@ lowPassSlider.oninput = function() {
     lowPassNode.type = 'lowpass'; //chooses the type of filter
     lowPassNode.frequency.value = lowPassOn ? this.value : 22000; //assigns the value of the slider to the frequency value
 }
-bandPassSlider.oninput = function() {
-    bandPassNode.type = 'bandpass'; //chooses the type of filter
-    bandPassNode.frequency.value = bandPassOn ? this.value : 0; //assigns the value of the slider to the frequency value
+highPassQSlider.oninput = function() {
+    highPassNode.Q.value = this.value;
+}
+lowPassQSlider.oninput = function() {
+    lowPassNode.Q.value = this.value;
 }
 
 // oscillator settings
@@ -97,34 +95,10 @@ oscBDetuneSlider.oninput = function() {
     oscBDetune = this.value;
 }
 
-
-// envelope (code from https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques)
-let attackTime = 0.2;
-const attackControl = document.querySelector("#attack");
-attackControl.addEventListener(
-  "input",
-  (ev) => {
-    attackTime = parseInt(ev.target.value, 10);
-  },
-  false,
-);
-
-let releaseTime = 0.5;
-const releaseControl = document.querySelector("#release");
-releaseControl.addEventListener(
-  "input",
-  (ev) => {
-    releaseTime = parseInt(ev.target.value, 10);
-  },
-  false,
-);
-
-
 // pipeline
 function createPipeline() {
     highPassNode.connect(lowPassNode);
-    lowPassNode.connect(bandPassNode);
-    bandPassNode.connect(gainNode);
+    lowPassNode.connect(gainNode);
     gainNode.connect(context.destination); //connects the filters to the gain node and then to the output
     return highPassNode;
 }
@@ -137,9 +111,9 @@ function playOscillatorA(freq, key) {
     oscillatorNodesA[key].frequency.setValueAtTime(oscPitch, context.currentTime); //assigning the value of oscPitch to the oscillators frequency value
     oscillatorNodesA[key].detune.value = oscADetune;
     
-    let pipeline = createPipeline();
-    oscillatorNodesA[key].connect(pipeline); //sends to output
     oscillatorNodesA[key].start() //starts the oscillator
+
+    return oscillatorNodesA[key];
 }
 
 function playOscillatorB(freq, key) {
@@ -149,9 +123,9 @@ function playOscillatorB(freq, key) {
     oscillatorNodesB[key].frequency.setValueAtTime(oscPitch, context.currentTime); //assigning the value of oscPitch to the oscillators frequency value
     oscillatorNodesB[key].detune.value = oscBDetune;
     
-    let pipeline = createPipeline();
-    oscillatorNodesB[key].connect(pipeline); //sends to output
     oscillatorNodesB[key].start() //starts the oscillator
+
+    return oscillatorNodesB[key];
 }
 
 function stopOscillators(key) {
@@ -169,8 +143,19 @@ function stopOscillators(key) {
 
 for(let i = 0; i < frequencies.length; i++) { //for loop to iterate through the array
     keys[i].addEventListener('mousedown', function(){
-        oscAOn ? playOscillatorA(frequencies[i], keyboardKeyNames[i]) : null;
-        oscBOn ? playOscillatorB(frequencies[i], keyboardKeyNames[i]) : null;
+        let a = oscAOn ? playOscillatorA(frequencies[i], event.key, oscAType, oscADetune) : null;
+        let b = oscBOn ? playOscillatorB(frequencies[i], event.key, oscBType, oscBDetune) : null;
+        let hookup = createPipeline();
+        if (oscAOn && oscBOn) {
+            let merger = context.createChannelMerger(2);
+            a.connect(merger, 0, 0);
+            b.connect(merger, 0, 1);
+            merger.connect(hookup);
+        } else if (oscAOn) {
+            a.connect(hookup);
+        } else if (oscBOn) {
+            b.connect(hookup);
+        }
     });
     window.addEventListener('mouseup', function(){
         stopOscillators(keyboardKeyNames[i]);
@@ -181,8 +166,19 @@ for(let i = 0; i < keyboardKeyNames.length; i++) {
     document.addEventListener('keydown', function(event) {
         if(event.key == keyboardKeyNames[i] && keyboardKeys[event.key] == false) {
             keyboardKeys[event.key] = true;
-            oscAOn ? playOscillatorA(frequencies[i], event.key, oscAType, oscADetune) : null;
-            oscBOn ? playOscillatorB(frequencies[i], event.key, oscBType, oscBDetune) : null;
+            let a = oscAOn ? playOscillatorA(frequencies[i], event.key, oscAType, oscADetune) : null;
+            let b = oscBOn ? playOscillatorB(frequencies[i], event.key, oscBType, oscBDetune) : null;
+            let hookup = createPipeline();
+            if (oscAOn && oscBOn) {
+                let merger = context.createChannelMerger(2);
+                a.connect(merger, 0, 0);
+                b.connect(merger, 0, 1);
+                merger.connect(hookup);
+            } else if (oscAOn) {
+                a.connect(hookup);
+            } else if (oscBOn) {
+                b.connect(hookup);
+            }
         }
     });
     document.addEventListener('keyup', function(event) {
