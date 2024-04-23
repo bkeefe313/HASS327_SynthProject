@@ -1,67 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <link rel="stylesheet" type="text/css" href="style.css">
-<head>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <title>HASS 327 Synth Project</title>
-</head>
-<body>
+  </head>
+
+  <body>
     <h1>HASS 327 SYNTH PROJECT</h1>
     <div id="synth">
-        <div id="console">
-            <label for="volume">Volume:</label>
-            <input type="range" id="volume" name="volume" min="0" max="100">
-            <label for="filter-sliders">Filters:</label>
-            <div id="filter-sliders">
-                <input id="low-pass" type="range" min="0" max="22000">Frequency
-                <input id="low-pass-q" type="range" min="0" max="10" value="0">Q
-                <input id="low-pass-toggle" type="checkbox">Low Pass
-                <input id="high-pass" type="range" min="0" max="22000">Frequency
-                <input id="high-pass-q" type="range" min="0" max="10" value="0">Q
-                <input id="high-pass-toggle" type="checkbox">High Pass
-            </div>
-            <label for="ticker">Transpose:</label>
-            <input type="number" id="ticker" name="ticker" min="-5" max="5" step="1" value="0">
-            <div class="osc-controls">
-                <label for="osc-a">Oscillator A</label>
-                <input id="a-on" type="checkbox" checked>On
-                <select id="a-type" name="osc-a-type">
-                    <option value="sine">Sine</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Sawtooth</option>
-                    <option value="triangle">Triangle</option>
-                </select>
-                <input id="a-detune" type="range" min="-100" max="100" value="0">
-            </div>
-            <div id="osc-controls">
-                <label for="osc-b">Oscillator B</label>
-                <input id="b-on" type="checkbox" checked>On
-                <select id="b-type" name="osc-b-type">
-                    <option value="sine">Sine</option>
-                    <option value="square">Square</option>
-                    <option value="sawtooth">Sawtooth</option>
-                    <option value="triangle">Triangle</option>
-                </select>
-                <input id="b-detune" type="range" min="-100" max="100" value="0">
-            </div>
+      <div id="console">
+        <label for="volume">Volume:</label>
+        <input type="range" id="volume" name="volume" min="0" max="100" />
+        <label for="filter-sliders">Filters:</label>
+        <div id="filter-sliders">
+          <input id="low-pass" type="range" min="0" max="22000" />Frequency
+          <input id="low-pass-q" type="range" min="0" max="10" value="0" />Q
+          <input id="low-pass-toggle" type="checkbox" />Low Pass
+          <input id="high-pass" type="range" min="0" max="22000" />Frequency
+          <input id="high-pass-q" type="range" min="0" max="10" value="0" />Q
+          <input id="high-pass-toggle" type="checkbox" />High Pass
         </div>
-        <div id="piano">
-            <div id="c1" class="key white">A</div>
-            <div id="d_" class="key black">W</div>
-            <div id="d" class="key white">S</div>
-            <div id="e_" class="key black">E</div>
-            <div id="e" class="key white">D</div>
-            <div id="f" class="key white">F</div>
-            <div id="g_" class="key black">T</div>
-            <div id="g" class="key white">G</div>
-            <div id="a_" class="key black">Y</div>
-            <div id="a" class="key white">H</div>
-            <div id="b_" class="key black">U</div>
-            <div id="b" class="key white">J</div>
-            <div id="c2" class="key white">K</div>
+        <label for="ticker">Transpose:</label>
+        <input
+          type="number"
+          id="ticker"
+          name="ticker"
+          min="-5"
+          max="5"
+          step="1"
+          value="0"
+        />
+        <div class="osc-controls">
+          <label for="osc-a">Oscillator A</label>
+          <input id="a-on" type="checkbox" checked />On
+          <select id="a-type" name="osc-a-type">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle">Triangle</option>
+          </select>
+          <input id="a-detune" type="range" min="-100" max="100" value="0" />
         </div>
+        <div id="osc-controls">
+          <label for="osc-b">Oscillator B</label>
+          <input id="b-on" type="checkbox" checked />On
+          <select id="b-type" name="osc-b-type">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle">Triangle</option>
+          </select>
+          <input id="b-detune" type="range" min="-100" max="100" value="0" />
+        </div>
+      </div>
+      <div id="piano">
+        <div id="c1" class="key white">A</div>
+        <div id="d_" class="key black">W</div>
+        <div id="d" class="key white">S</div>
+        <div id="e_" class="key black">E</div>
+        <div id="e" class="key white">D</div>
+        <div id="f" class="key white">F</div>
+        <div id="g_" class="key black">T</div>
+        <div id="g" class="key white">G</div>
+        <div id="a_" class="key black">Y</div>
+        <div id="a" class="key white">H</div>
+        <div id="b_" class="key black">U</div>
+        <div id="b" class="key white">J</div>
+        <div id="c2" class="key white">K</div>
+      </div>
     </div>
-</body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
-<script src="script.js"></script>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+  <script src="script.js"></script>
 </html>
