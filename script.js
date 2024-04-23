@@ -203,8 +203,10 @@ function stopOscillators(key) {
 }
 
 for (let i = 0; i < frequencies.length; i++) {
-  //for loop to iterate through the array
-  keys[i].addEventListener("pointerdown", () => {
+  function playSound(e) {
+    if (e.type === 'pointerenter' && e.buttons !== 1) {
+      return;
+    }
     let a = oscAOn
       ? playOscillatorA(frequencies[i], keyboardKeyNames[i], oscAType, oscADetune)
       : null;
@@ -222,11 +224,17 @@ for (let i = 0; i < frequencies.length; i++) {
     } else if (oscBOn) {
       b.connect(hookup);
     }
-  });
+  }
+  //for loop to iterate through the array
+  keys[i].addEventListener("pointerdown", playSound);
+  keys[i].addEventListener("pointerenter", playSound);
   keys[i].addEventListener("pointerup", () => {
     stopOscillators(keyboardKeyNames[i]);
   });
   keys[i].addEventListener("pointerout", () => {
+    stopOscillators(keyboardKeyNames[i]);
+  });
+  keys[i].addEventListener("pointercancel", () => {
     stopOscillators(keyboardKeyNames[i]);
   });
 }
