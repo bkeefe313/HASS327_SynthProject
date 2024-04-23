@@ -188,15 +188,17 @@ function playOscillatorB(freq, key) {
 }
 
 function stopOscillators(key) {
-  if (oscillatorNodesA[key] != null) {
-    oscillatorNodesA[key].stop(); //stops the oscillator
-    oscillatorNodesA[key].disconnect(); //disconnects the oscillator
-    oscillatorNodesA[key] = null; //sets the oscillator to null
-  }
-  if (oscillatorNodesB[key] != null) {
-    oscillatorNodesB[key].stop(); //stops the oscillator
-    oscillatorNodesB[key].disconnect(); //disconnects the oscillator
-    oscillatorNodesB[key] = null; //sets the oscillator to null
+  if (keyboardKeys[key] !== true) {
+    if (oscillatorNodesA[key] != null) {
+      oscillatorNodesA[key].stop(); //stops the oscillator
+      oscillatorNodesA[key].disconnect(); //disconnects the oscillator
+      oscillatorNodesA[key] = null; //sets the oscillator to null
+    }
+    if (oscillatorNodesB[key] != null) {
+      oscillatorNodesB[key].stop(); //stops the oscillator
+      oscillatorNodesB[key].disconnect(); //disconnects the oscillator
+      oscillatorNodesB[key] = null; //sets the oscillator to null
+    }
   }
 }
 
