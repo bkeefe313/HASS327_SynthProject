@@ -43,7 +43,7 @@ let keyboardKeys = {
 // Ticker box (transpose)
 let transpose = 0;
 let tickerBox = document.getElementById("ticker");
-tickerBox.oninput = () => {
+tickerBox.oninput = function () {
   transpose = this.value;
 };
 
@@ -52,7 +52,7 @@ tickerBox.oninput = () => {
 // gain
 let volumeSlider = document.getElementById("volume");
 let gainNode = context.createGain(); //creates gain node
-volumeSlider.oninput = () => {
+volumeSlider.oninput = function () {
   gainNode.gain.value = this.value / 100;
 };
 
@@ -108,18 +108,18 @@ document.getElementById("low-pass-toggle").oninput = () => {
   lowPassOn = !lowPassOn;
   lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 0;
 };
-highPassSlider.oninput = () => {
+highPassSlider.oninput = function () {
   highPassNode.type = "highpass"; //chooses the type of filter
   highPassNode.frequency.value = highPassOn ? this.value : 0; //assigns the value of the slider to the frequency value
 };
-lowPassSlider.oninput = () => {
+lowPassSlider.oninput = function () {
   lowPassNode.type = "lowpass"; //chooses the type of filter
   lowPassNode.frequency.value = lowPassOn ? this.value : 22000; //assigns the value of the slider to the frequency value
 };
-highPassQSlider.oninput = () => {
+highPassQSlider.oninput = function () {
   highPassNode.Q.value = this.value;
 };
-lowPassQSlider.oninput = () => {
+lowPassQSlider.oninput = function () {
   lowPassNode.Q.value = this.value;
 };
 
@@ -142,16 +142,16 @@ oscAOnToggle.oninput = () => {
 oscBOnToggle.oninput = () => {
   oscBOn = !oscBOn;
 };
-oscATypeChoice.onchange = () => {
+oscATypeChoice.onchange = function () {
   oscAType = this.value;
 };
-oscBTypeChoice.onchange = () => {
+oscBTypeChoice.onchange = function () {
   oscBType = this.value;
 };
-oscADetuneSlider.oninput = () => {
+oscADetuneSlider.oninput = function () {
   oscADetune = this.value;
 };
-oscBDetuneSlider.oninput = () => {
+oscBDetuneSlider.oninput = function () {
   oscBDetune = this.value;
 };
 
