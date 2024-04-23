@@ -30,6 +30,8 @@ body h1 {
   box-sizing: border-box;
   height: 100%;
   width: 60px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .white {
