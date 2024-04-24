@@ -1,7 +1,6 @@
 // HASS 327 Synth Project
 
 const context = new AudioContext(); //allows access to webaudioapi
-const c1 = document.querySelector("#c1"); //grabs the button
 
 // notes go from C4 to C5 (including black keys)
 let keys = document.querySelectorAll(".key"); //grabs all the keys
@@ -87,7 +86,6 @@ let oscillatorNodesB = {
   j: null,
   k: null,
 }; //array of keyboard oscillators
-let secondOscillatorOn = false;
 
 // filters
 let highPassSlider = document.getElementById("high-pass");
@@ -164,6 +162,9 @@ function createPipeline() {
 }
 
 function playOscillatorA(freq, key) {
+  if (oscillatorNodesA[key]) {
+    return;
+  }
   let oscPitch = freq * Math.pow(2, transpose); //transposes the frequency
   oscillatorNodesA[key] = context.createOscillator(); //creates oscillator
   oscillatorNodesA[key].type = oscAType == null ? "sine" : oscAType; //chooses the type of wave
@@ -176,6 +177,9 @@ function playOscillatorA(freq, key) {
 }
 
 function playOscillatorB(freq, key) {
+  if (oscillatorNodesB[key]) {
+    return;
+  }
   let oscPitch = freq * Math.pow(2, transpose); //transposes the frequency
   oscillatorNodesB[key] = context.createOscillator(); //creates oscillator
   oscillatorNodesB[key].type = oscBType == null ? "sine" : oscBType; //chooses the type of wave
@@ -188,17 +192,49 @@ function playOscillatorB(freq, key) {
 }
 
 function stopOscillators(key) {
-  if (keyboardKeys[key] !== true) {
+  // stop it from stopping when a key is being held
+  if (!keyboardKeys[key]) {
     if (oscillatorNodesA[key] != null) {
-      oscillatorNodesA[key].stop(); //stops the oscillator
-      oscillatorNodesA[key].disconnect(); //disconnects the oscillator
-      oscillatorNodesA[key] = null; //sets the oscillator to null
+      try {
+        oscillatorNodesA[key].stop(); //stops the oscillator
+        oscillatorNodesA[key].disconnect(); //disconnects the oscillator
+        oscillatorNodesA[key] = null; //sets the oscillator to null
+      }
+      catch { }
     }
     if (oscillatorNodesB[key] != null) {
-      oscillatorNodesB[key].stop(); //stops the oscillator
-      oscillatorNodesB[key].disconnect(); //disconnects the oscillator
-      oscillatorNodesB[key] = null; //sets the oscillator to null
+      try {
+        oscillatorNodesB[key].stop(); //stops the oscillator
+        oscillatorNodesB[key].disconnect(); //disconnects the oscillator
+        oscillatorNodesB[key] = null; //sets the oscillator to null
+      } catch { }
     }
+  }
+}
+
+function playOscillators(freq, key) {
+  console.log(freq, key);
+
+  // stop oscillators just in case
+  // stopOscillators(key);
+
+  let a = oscAOn
+    ? playOscillatorA(freq, key, oscAType, oscADetune)
+    : null;
+  let b = oscBOn
+    ? playOscillatorB(freq, key, oscBType, oscBDetune)
+    : null;
+
+  let hookup = createPipeline();
+  if (oscAOn && oscBOn) {
+    let merger = context.createChannelMerger(2);
+    a.connect(merger, 0, 0);
+    b.connect(merger, 0, 1);
+    merger.connect(hookup);
+  } else if (oscAOn) {
+    a.connect(hookup);
+  } else if (oscBOn) {
+    b.connect(hookup);
   }
 }
 
@@ -207,28 +243,13 @@ for (let i = 0; i < frequencies.length; i++) {
     if (e.type === 'pointerenter' && e.buttons !== 1) {
       return;
     }
-    let a = oscAOn
-      ? playOscillatorA(frequencies[i], keyboardKeyNames[i], oscAType, oscADetune)
-      : null;
-    let b = oscBOn
-      ? playOscillatorB(frequencies[i], keyboardKeyNames[i], oscBType, oscBDetune)
-      : null;
-    let hookup = createPipeline();
-    if (oscAOn && oscBOn) {
-      let merger = context.createChannelMerger(2);
-      a.connect(merger, 0, 0);
-      b.connect(merger, 0, 1);
-      merger.connect(hookup);
-    } else if (oscAOn) {
-      a.connect(hookup);
-    } else if (oscBOn) {
-      b.connect(hookup);
-    }
+    playOscillators(frequencies[i], keyboardKeyNames[i]);
   }
   //for loop to iterate through the array
   keys[i].addEventListener("pointerdown", playSound);
-  keys[i].addEventListener("pointerenter", playSound);
+
   keys[i].addEventListener("pointerup", () => {
+    console.log('pointerup');
     stopOscillators(keyboardKeyNames[i]);
   });
   keys[i].addEventListener("pointerout", () => {
@@ -269,3 +290,29 @@ for (let i = 0; i < keyboardKeyNames.length; i++) {
     }
   });
 }
+
+addEventListener('contextmenu', e => {
+  if (e.target.matches('.key')) {
+    e.preventDefault();
+  }
+});
+
+function playOnTouchDrag(e) {
+  console.log(e);
+  if (e.target.matches('.key')) {
+    const key = e.target.textContent;
+    playOscillators(frequencies[keyboardKeyNames.indexOf(key.toLowerCase())], key);
+  }
+}
+
+// addEventListener('touchstart', () => {
+//   addEventListener('touchmove', playOnTouchDrag);
+// })
+
+// addEventListener('touchend', () => {
+//   removeEventListener('touchmove', playOnTouchDrag);
+// });
+
+// addEventListener('touchcancel', () => {
+//   removeEventListener('touchmove', playOnTouchDrag);
+// });
