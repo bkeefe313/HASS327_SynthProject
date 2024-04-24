@@ -42,11 +42,11 @@ let lowPassOn = false;
 let bandPassOn = false;
 document.getElementById('high-pass-toggle').oninput = function() {
     highPassOn = !highPassOn;
-    highPassNode.frequency.value = highPassOn ? highPassSlider.value : 22000;
+    highPassNode.frequency.value = highPassOn ? highPassSlider.value : 0;
 }
 document.getElementById('low-pass-toggle').oninput = function() {
     lowPassOn = !lowPassOn;
-    lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 0;
+    lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 22000;
 }
 highPassSlider.oninput = function() {
     highPassNode.type = 'highpass'; //chooses the type of filter
@@ -143,8 +143,8 @@ function stopOscillators(key) {
 
 for(let i = 0; i < frequencies.length; i++) { //for loop to iterate through the array
     keys[i].addEventListener('mousedown', function(){
-        let a = oscAOn ? playOscillatorA(frequencies[i], event.key, oscAType, oscADetune) : null;
-        let b = oscBOn ? playOscillatorB(frequencies[i], event.key, oscBType, oscBDetune) : null;
+        let a = oscAOn ? playOscillatorA(frequencies[i], keyboardKeyNames[i]) : null;
+        let b = oscBOn ? playOscillatorB(frequencies[i], keyboardKeyNames[i]) : null;
         let hookup = createPipeline();
         if (oscAOn && oscBOn) {
             let merger = context.createChannelMerger(2);
