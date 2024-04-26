@@ -225,6 +225,10 @@ function playOscillators(freq, key) {
     ? playOscillatorB(freq, key, oscBType, oscBDetune)
     : null;
 
+  if (!a && !b) {
+    return;
+  }
+
   let hookup = createPipeline();
   if (oscAOn && oscBOn) {
     let merger = context.createChannelMerger(2);
@@ -247,6 +251,7 @@ for (let i = 0; i < frequencies.length; i++) {
   }
   //for loop to iterate through the array
   keys[i].addEventListener("pointerdown", playSound);
+  keys[i].addEventListener("pointerenter", playSound);
 
   keys[i].addEventListener("pointerup", () => {
     console.log('pointerup');
@@ -299,20 +304,21 @@ addEventListener('contextmenu', e => {
 
 function playOnTouchDrag(e) {
   console.log(e);
-  if (e.target.matches('.key')) {
-    const key = e.target.textContent;
+  const target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
+  if (target.matches('.key')) {
+    const key = target.textContent;
     playOscillators(frequencies[keyboardKeyNames.indexOf(key.toLowerCase())], key);
   }
 }
 
-// addEventListener('touchstart', () => {
-//   addEventListener('touchmove', playOnTouchDrag);
-// })
+addEventListener('touchstart', () => {
+  addEventListener('touchmove', playOnTouchDrag);
+});
 
-// addEventListener('touchend', () => {
-//   removeEventListener('touchmove', playOnTouchDrag);
-// });
+addEventListener('touchend', () => {
+  removeEventListener('touchmove', playOnTouchDrag);
+});
 
-// addEventListener('touchcancel', () => {
-//   removeEventListener('touchmove', playOnTouchDrag);
-// });
+addEventListener('touchcancel', () => {
+  removeEventListener('touchmove', playOnTouchDrag);
+});
