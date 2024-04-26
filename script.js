@@ -2,6 +2,16 @@
 
 const context = new AudioContext(); //allows access to webaudioapi
 
+// create graph variables
+const canvas = document.getElementById('waveform');
+const canvasCtx = canvas.getContext('2d');
+
+// create an analyser node to fill a dataArray with the sound data over time.
+const analyser = context.createAnalyser();
+analyser.fftSize = 4096;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
 // notes go from C4 to C5 (including black keys)
 let keys = document.querySelectorAll(".key"); //grabs all the keys
 let frequencies = [
@@ -322,3 +332,53 @@ addEventListener('touchend', () => {
 addEventListener('touchcancel', () => {
   removeEventListener('touchmove', playOnTouchDrag);
 });
+
+// connect to the gainNode and destination to get sound output
+gainNode.connect(analyser);
+analyser.connect(context.destination);
+
+// function to draw the waveform
+function draw() {
+  setTimeout(() => {
+      requestAnimationFrame(draw);
+      
+      // get the level of sound being outputted to graph
+      analyser.getByteTimeDomainData(dataArray);
+
+      // create a background for graph
+      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // create a line for the graph
+      canvasCtx.lineWidth = 3;
+      canvasCtx.strokeStyle = 'rgb(50, 200, 50)';
+
+      // start drawing the graph
+      canvasCtx.beginPath();
+
+      // graph resolution
+      var sliceWidth = canvas.width * 1.0 / bufferLength;
+      var x = 0;
+
+      // loop through and draw the line
+      for (let i = 0; i < bufferLength; i++) {
+          var v = dataArray[i] / 64.0; 
+          var y = v * canvas.height/8 + canvas.height/4;
+
+          if (i === 0) {
+              canvasCtx.moveTo(x, y);
+          } else {
+              canvasCtx.lineTo(x, y);
+          }
+          // move to the next x position
+          x += sliceWidth;
+      }
+
+      // put the line on the screen 
+      canvasCtx.lineTo(canvas.width, canvas.height / 2);
+      canvasCtx.stroke();
+
+  }, 10); // setTimeout delay to limit updates per frame
+}
+
+draw();
