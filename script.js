@@ -239,21 +239,9 @@ function playOscillators(freq, key) {
     ? playOscillatorB(freq, key, oscBType, oscBDetune)
     : null;
 
-  if (!a && !b) {
-    return;
-  }
-
-  let hookup = createPipeline();
-  if (oscAOn && oscBOn) {
-    let merger = context.createChannelMerger(2);
-    a.connect(merger, 0, 0);
-    b.connect(merger, 0, 1);
-    merger.connect(hookup);
-  } else if (oscAOn) {
-    a.connect(hookup);
-  } else if (oscBOn) {
-    b.connect(hookup);
-  }
+  const hookup = createPipeline();
+  a?.connect(hookup);
+  b?.connect(hookup);
 }
 
 for (let i = 0; i < frequencies.length; i++) {
