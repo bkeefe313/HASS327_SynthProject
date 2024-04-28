@@ -110,11 +110,11 @@ let bandPassOn = false;
 
 document.getElementById("high-pass-toggle").oninput = () => {
   highPassOn = !highPassOn;
-  highPassNode.frequency.value = highPassOn ? highPassSlider.value : 22000;
+  highPassNode.frequency.value = highPassOn ? highPassSlider.value : 0;
 };
 document.getElementById("low-pass-toggle").oninput = () => {
   lowPassOn = !lowPassOn;
-  lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 0;
+  lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 22000;
 };
 highPassSlider.oninput = function () {
   highPassNode.type = "highpass"; //chooses the type of filter
