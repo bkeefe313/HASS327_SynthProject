@@ -144,6 +144,7 @@ let oscAType = "sine";
 let oscBType = "sine";
 let oscADetune = 0;
 let oscBDetune = 0;
+let pitchBend = true;
 oscAOnToggle.oninput = () => {
   oscAOn = !oscAOn;
 };
@@ -162,6 +163,9 @@ oscADetuneSlider.oninput = function () {
 oscBDetuneSlider.oninput = function () {
   oscBDetune = this.value;
 };
+document.getElementById('pitchBending').addEventListener('input', () => {
+  pitchBend = !pitchBend;
+});
 
 // pipeline
 function createPipeline() {
@@ -253,27 +257,54 @@ function playOscillators(freq, key) {
 }
 
 for (let i = 0; i < frequencies.length; i++) {
+  function bendPitch(e) {
+    if (!pitchBend) {
+      return;
+    }
+    const currOscA = oscillatorNodesA[e.target.textContent.toLowerCase()];
+    const currOscB = oscillatorNodesB[e.target.textContent.toLowerCase()];
+
+    const boundingRect = e.target.getBoundingClientRect();
+
+    // goes from -1 to 1
+    const xPercent = (e.x - boundingRect.x) * 2 / boundingRect.width - 1;
+
+    // goes from 0 to 1
+    let yPercent = (e.y - boundingRect.y) / boundingRect.height;
+    if (yPercent < 0.05) {
+      yPercent = 0;
+    }
+
+    const baseFreq = frequencies[i];
+
+    currOscA?.frequency.setValueAtTime(baseFreq + 40 * xPercent + 70 * yPercent, context.currentTime)
+    currOscB?.frequency.setValueAtTime(baseFreq + 40 * xPercent - 70 * yPercent, context.currentTime)
+  }
+
   function playSound(e) {
     if (e.type === 'pointerenter' && e.buttons !== 1) {
       return;
     }
     playOscillators(frequencies[i], keyboardKeyNames[i]);
+    bendPitch(e);
+    e.target.addEventListener('pointermove', bendPitch);
   }
+
+  function stopSound(e) {
+    stopOscillators(keyboardKeyNames[i]);
+    e.target.removeEventListener('pointermove', bendPitch);
+  }
+
   //for loop to iterate through the array
   keys[i].addEventListener("pointerdown", playSound);
   keys[i].addEventListener("pointerenter", playSound);
 
-  keys[i].addEventListener("pointerup", () => {
-    stopOscillators(keyboardKeyNames[i]);
-  });
-  keys[i].addEventListener("pointerout", () => {
-    stopOscillators(keyboardKeyNames[i]);
-  });
-  keys[i].addEventListener("pointercancel", () => {
-    stopOscillators(keyboardKeyNames[i]);
-  });
+  keys[i].addEventListener("pointerup", stopSound);
+  keys[i].addEventListener("pointerout", stopSound);
+  keys[i].addEventListener("pointercancel", stopSound);
 }
 
+// add event listeners for playing with keyboard
 for (let i = 0; i < keyboardKeyNames.length; i++) {
   document.addEventListener("keydown", (event) => {
     if (event.key === keyboardKeyNames[i] && !keyboardKeys[event.key]) {
@@ -305,6 +336,7 @@ for (let i = 0; i < keyboardKeyNames.length; i++) {
   });
 }
 
+// prevent holding touch from opening right-click menu
 addEventListener('contextmenu', e => {
   if (e.target.matches('.key')) {
     e.preventDefault();
