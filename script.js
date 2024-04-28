@@ -223,7 +223,7 @@ function stopOscillators(key) {
 }
 
 function playOscillators(freq, key) {
-  console.log(freq, key);
+  // console.log(freq, key);
 
   // stop oscillators just in case
   // stopOscillators(key);
@@ -264,7 +264,6 @@ for (let i = 0; i < frequencies.length; i++) {
   keys[i].addEventListener("pointerenter", playSound);
 
   keys[i].addEventListener("pointerup", () => {
-    console.log('pointerup');
     stopOscillators(keyboardKeyNames[i]);
   });
   keys[i].addEventListener("pointerout", () => {
@@ -313,7 +312,7 @@ addEventListener('contextmenu', e => {
 });
 
 function playOnTouchDrag(e) {
-  console.log(e);
+  // console.log(e);
   const target = document.elementFromPoint(e.touches[0].pageX, e.touches[0].pageY);
   if (target.matches('.key')) {
     const key = target.textContent;
@@ -340,43 +339,43 @@ analyser.connect(context.destination);
 // function to draw the waveform
 function draw() {
   setTimeout(() => {
-      requestAnimationFrame(draw);
-      
-      // get the level of sound being outputted to graph
-      analyser.getByteTimeDomainData(dataArray);
+    requestAnimationFrame(draw);
 
-      // create a background for graph
-      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    // get the level of sound being outputted to graph
+    analyser.getByteTimeDomainData(dataArray);
 
-      // create a line for the graph
-      canvasCtx.lineWidth = 3;
-      canvasCtx.strokeStyle = 'rgb(50, 200, 50)';
+    // create a background for graph
+    canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // start drawing the graph
-      canvasCtx.beginPath();
+    // create a line for the graph
+    canvasCtx.lineWidth = 3;
+    canvasCtx.strokeStyle = 'rgb(50, 200, 50)';
 
-      // graph resolution
-      var sliceWidth = canvas.width * 1.0 / bufferLength;
-      var x = 0;
+    // start drawing the graph
+    canvasCtx.beginPath();
 
-      // loop through and draw the line
-      for (let i = 0; i < bufferLength; i++) {
-          var v = dataArray[i] / 64.0; 
-          var y = v * canvas.height/8 + canvas.height/4;
+    // graph resolution
+    var sliceWidth = canvas.width / bufferLength;
+    var x = 0;
 
-          if (i === 0) {
-              canvasCtx.moveTo(x, y);
-          } else {
-              canvasCtx.lineTo(x, y);
-          }
-          // move to the next x position
-          x += sliceWidth;
+    // loop through and draw the line
+    for (let i = 0; i < bufferLength; i++) {
+      var v = dataArray[i] / 64;
+      var y = v * canvas.height / 8 + canvas.height / 4;
+
+      if (i === 0) {
+        canvasCtx.moveTo(x, y);
+      } else {
+        canvasCtx.lineTo(x, y);
       }
+      // move to the next x position
+      x += sliceWidth;
+    }
 
-      // put the line on the screen 
-      canvasCtx.lineTo(canvas.width, canvas.height / 2);
-      canvasCtx.stroke();
+    // put the line on the screen 
+    canvasCtx.lineTo(canvas.width, canvas.height / 2);
+    canvasCtx.stroke();
 
   }, 10); // setTimeout delay to limit updates per frame
 }
