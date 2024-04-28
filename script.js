@@ -102,8 +102,12 @@ let highPassSlider = document.getElementById("high-pass");
 let highPassQSlider = document.getElementById("high-pass-q");
 let lowPassSlider = document.getElementById("low-pass");
 let lowPassQSlider = document.getElementById("low-pass-q");
+
 let highPassNode = context.createBiquadFilter(); //creates high pass filter
+highPassNode.type = "highpass"; //chooses the type of filter
 let lowPassNode = context.createBiquadFilter(); //creates low pass filter
+lowPassNode.type = "lowpass"; //chooses the type of filter
+
 let highPassOn = false;
 let lowPassOn = false;
 let bandPassOn = false;
@@ -117,11 +121,9 @@ document.getElementById("low-pass-toggle").oninput = () => {
   lowPassNode.frequency.value = lowPassOn ? lowPassSlider.value : 22000;
 };
 highPassSlider.oninput = function () {
-  highPassNode.type = "highpass"; //chooses the type of filter
   highPassNode.frequency.value = highPassOn ? this.value : 0; //assigns the value of the slider to the frequency value
 };
 lowPassSlider.oninput = function () {
-  lowPassNode.type = "lowpass"; //chooses the type of filter
   lowPassNode.frequency.value = lowPassOn ? this.value : 22000; //assigns the value of the slider to the frequency value
 };
 highPassQSlider.oninput = function () {
@@ -145,6 +147,7 @@ let oscBType = "sine";
 let oscADetune = 0;
 let oscBDetune = 0;
 let pitchBend = true;
+
 oscAOnToggle.oninput = () => {
   oscAOn = !oscAOn;
 };
