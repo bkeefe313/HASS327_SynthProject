@@ -146,7 +146,7 @@ let oscAType = "sine";
 let oscBType = "sine";
 let oscADetune = 0;
 let oscBDetune = 0;
-let pitchBend = true;
+let pitchBend = false;
 
 oscAOnToggle.oninput = () => {
   oscAOn = !oscAOn;
@@ -166,8 +166,8 @@ oscADetuneSlider.oninput = function () {
 oscBDetuneSlider.oninput = function () {
   oscBDetune = this.value;
 };
-document.getElementById('pitchBending').addEventListener('input', () => {
-  pitchBend = !pitchBend;
+document.getElementById('pitchBending').addEventListener('input', (e) => {
+  pitchBend = e.target.checked;
 });
 
 // pipeline
@@ -262,12 +262,14 @@ for (let i = 0; i < frequencies.length; i++) {
 
     // goes from 0 to 1
     let yPercent = (e.y - boundingRect.y) / boundingRect.height;
-    if (yPercent < 0.05) {
+    // top half just bends pitch normally
+    if (yPercent < 0.5) {
       yPercent = 0;
     }
 
-    const baseFreq = frequencies[i];
+    const baseFreq = frequencies[i] * Math.pow(2, transpose);
 
+    // bottom half separates the two oscillators more the lower you are
     currOscA?.frequency.setValueAtTime(baseFreq + 40 * xPercent + 70 * yPercent, context.currentTime)
     currOscB?.frequency.setValueAtTime(baseFreq + 40 * xPercent - 70 * yPercent, context.currentTime)
   }
@@ -404,3 +406,15 @@ function draw() {
 }
 
 draw();
+
+// presets
+document.getElementById('pre1').addEventListener('click', () => {
+  location.reload();
+});
+
+document.getElementById('pre2').addEventListener('click', () => {
+  oscBDetune = 200;
+  document.getElementById('b-detune').value = 200
+  oscAType = 'sawtooth';
+  document.getElementById('a-type').value = 'sawtooth'
+});

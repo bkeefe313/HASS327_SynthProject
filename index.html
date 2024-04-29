@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="style.css" />
   <title>HASS 327 Synth Project</title>
+  <script src="script.js" defer></script>
 </head>
 
 <body>
@@ -21,7 +22,7 @@
         <div>
           <label><input id="low-pass" type="range" min="0" max="1000" />Frequency</label>
           <label><input id="low-pass-q" type="range" min="0" max="10" value="0" />Q</label>
-          <label><input id="low-pass-toggle" type="checkbox"/>Low Pass</label>
+          <label><input id="low-pass-toggle" type="checkbox" />Low Pass</label>
         </div>
         <div>
           <label><input id="high-pass" type="range" min="0" max="1000" />Frequency</label>
@@ -42,7 +43,7 @@
             <option value="sawtooth">Sawtooth</option>
             <option value="triangle">Triangle</option>
           </select>
-          <input id="a-detune" type="range" min="-100" max="100" value="0" />
+          <input id="a-detune" type="range" min="-200" max="200" value="0" />
         </div>
         <div id="osc-controls">
           <label for="osc-b">Oscillator B</label>
@@ -53,10 +54,18 @@
             <option value="sawtooth">Sawtooth</option>
             <option value="triangle">Triangle</option>
           </select>
-          <input id="b-detune" type="range" min="-100" max="100" value="0" />
+          <input id="b-detune" type="range" min="-200" max="200" value="0" />
         </div>
       </div>
-      <div><label><input type="checkbox" name="" id="pitchBending" checked>Pitch bending (try dragging across the keys)</label></div>
+      <div>
+        <label>
+          <input type="checkbox" name="" id="pitchBending">Pitch bending (try dragging across the keys)
+        </label>
+      </div>
+      <div>
+        <button id="pre1">Preset 1 (default)</button>
+        <button id="pre2">Preset 2</button>
+      </div>
     </div>
     <div id="piano">
       <div id="c1" class="key white">A</div>
@@ -78,8 +87,5 @@
     </div>
   </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
-<script src="script.js"></script>
 
 </html>
